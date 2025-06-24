@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Password Generator</title>
+  <style>
+    body {
+      background-color: whitesmoke;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+    }
+
+    .container {
+      background-color: #111;
+      color: white;
+      padding: 30px 40px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+    }
+
+    h2 {
+      background-color: #eee;
+      color: black;
+      padding: 10px 20px;
+      border-radius: 50px;
+      margin-bottom: 30px;
+      display: inline-block;
+    }
+
+    .output-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: white;
+      padding: 10px 15px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      color: black;
+      gap: 10px;
+    }
+
+    .output-box input {
+      border: none;
+      font-size: 16px;
+      width: 280px;
+      outline: none;
+      background: transparent;
+      color: black;
+    }
+
+    .output-box button {
+      background-color: #eee;
+      border: none;
+      padding: 5px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .settings {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .settings label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    input[type="range"] {
+      width: 120px;
+      cursor: pointer;
+    }
+
+    .blue {
+      color: #4da6ff;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Password - Generator</h2>
+
+    <div class="output-box">
+      <input type="text" id="password" readonly>
+      <span>Password</span>
+      <button onclick="copyPassword()">Copy</button>
+    </div>
+
+    <div class="settings">
+      <label><span class="blue">Length</span> <span id="lengthVal">12</span></label>
+      <input type="range" id="lengthSlider" min="6" max="25" value="12">
+
+      <label><input type="checkbox" id="includeChars" checked> Characters</label>
+      <label><input type="checkbox" id="includeNumbers" checked> Numbers</label>
+    </div>
+  </div>
+
+  <script>
+    const passwordInput = document.getElementById("password");
+    const lengthSlider = document.getElementById("lengthSlider");
+    const lengthVal = document.getElementById("lengthVal");
+    const includeChars = document.getElementById("includeChars");
+    const includeNumbers = document.getElementById("includeNumbers");
+
+    const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+[]{}<>?/|~";
+    const nums = "0123456789";
+
+    function updateAndGenerate() {
+      lengthVal.textContent = lengthSlider.value;
+      generatePassword();
+    }
+
+    function generatePassword() {
+      let characters = "";
+      if (includeChars.checked) characters += chars;
+      if (includeNumbers.checked) characters += nums;
+
+      if (characters === "") {
+        passwordInput.value = "Select options!";
+        return;
+      }
+
+      let password = "";
+      for (let i = 0; i < lengthSlider.value; i++) {
+        password += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+      passwordInput.value = password;
+    }
+
+    function copyPassword() {
+      passwordInput.select();
+      document.execCommand("copy");
+      alert("Password copied to clipboard!");
+    }
+
+    // Initialize on load
+    window.onload = updateAndGenerate;
+
+    // Attach event listeners
+    includeChars.onchange = updateAndGenerate;
+    includeNumbers.onchange = updateAndGenerate;
+    lengthSlider.oninput = updateAndGenerate;
+  </script>
+</body>
+</html>
